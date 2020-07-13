@@ -1,6 +1,8 @@
 package com.evoluum.challenge.controller;
 
 import com.evoluum.challenge.model.Estado;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -16,19 +18,31 @@ import java.util.Collection;
 @RequestMapping("/estados")
 public class EstadoController {
 
+    Logger logger = LoggerFactory.getLogger(EstadoController.class);
 
     @GetMapping
-    public Collection<Estado> list(){
+    public Object list(){
 
+        logger.info("Initializing listing of states");
         RestTemplate restTemplate = new RestTemplate();
 
-        ResponseEntity<ArrayList<Estado>> response = restTemplate.exchange(
-                "https://servicodados.ibge.gov.br/api/v1/localidades/estados",
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<ArrayList<Estado>>() {});
+        try {
 
-        return response.getBody();
+            ResponseEntity<ArrayList<Estado>> response = restTemplate.exchange(
+                    "https://servicodados.ibge.gov.br/api/v1/localidades/estados",
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<ArrayList<Estado>>() {
+                    });
 
+            logger.info("returning list of states");
+            return response.getBody();
+
+        } catch (Exception ex) {
+
+            logger.warn("Error listing states, ex: " + ex);
+            return ex;
+
+        }
     }
 }
