@@ -16,6 +16,7 @@ import java.util.Collection;
 @RequestMapping("/estados")
 public class EstadoController {
 
+
     @GetMapping
     public Collection<Estado> list(){
 
