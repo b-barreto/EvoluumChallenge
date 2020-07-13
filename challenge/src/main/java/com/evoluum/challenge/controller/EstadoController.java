@@ -3,6 +3,7 @@ package com.evoluum.challenge.controller;
 import com.evoluum.challenge.model.Estado;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +22,10 @@ public class EstadoController {
     Logger logger = LoggerFactory.getLogger(EstadoController.class);
 
     @GetMapping
-    public Object list(){
+    @Cacheable(value = "listOfEstados")
+    public Object listEstados(){
 
-        logger.info("Initializing listing of states");
+        logger.info("Calling EstadoController.listEstados()");
         RestTemplate restTemplate = new RestTemplate();
 
         try {
@@ -35,13 +37,13 @@ public class EstadoController {
                     new ParameterizedTypeReference<ArrayList<Estado>>() {
                     });
 
-            logger.info("returning list of states");
+            logger.info("response.getBody() returned");
             return response.getBody();
 
         } catch (Exception ex) {
 
-            logger.warn("Error listing states, ex: " + ex);
-            return ex;
+            logger.warn("Error listEstados(), ex: " + ex);
+            return "Error";
 
         }
     }
