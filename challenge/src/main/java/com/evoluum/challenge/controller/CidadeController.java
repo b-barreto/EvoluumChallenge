@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -28,15 +29,12 @@ public class CidadeController {
     public Object listCidades(){
     logger.info("Calling CidadeController.listCidades()");
 
-
         RestTemplate restTemplate = new RestTemplate();
-
         EstadoController estadoController = new EstadoController();
         Collection<Estado> listOfEsdados = (Collection<Estado>) estadoController.listEstados();
         ArrayList<Cidade> listOfCidades = new ArrayList<>();
 
         try {
-
             listOfEsdados.forEach(estado -> {
                 ResponseEntity<ArrayList<Cidade>> response = restTemplate.exchange(
                         "https://servicodados.ibge.gov.br/api/v1/localidades/estados/"
@@ -45,12 +43,10 @@ public class CidadeController {
                         null,
                         new ParameterizedTypeReference<ArrayList<Cidade>>() {
                         });
-
                 listOfCidades.addAll(response.getBody());
             });
 
             CidadeCustomized cidadeCustomized = new CidadeCustomized();
-
             return cidadeCustomized.customizeCidade(listOfCidades);
 
         } catch (Exception ex) {

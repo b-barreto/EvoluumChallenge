@@ -44,7 +44,6 @@ public class EstadoController {
 
             logger.warn("Error listEstados(), ex: " + ex);
             return "Error";
-
         }
     }
 }
