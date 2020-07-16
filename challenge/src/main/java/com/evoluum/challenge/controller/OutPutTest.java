@@ -23,13 +23,13 @@ public class OutPutTest {
     String FILE_HEADER = "idEstado,siglaEstado,regiaoNome,nomeCidade,nomeMesorregiao,nomeFormatado";
 
     @GetMapping("/download")
-    public Object getOutputStream(HttpServletResponse response) throws IOException {
+    public void getOutputStream(HttpServletResponse response) throws IOException {
 
         CidadeController cidadeController = new CidadeController();
         Collection<CidadeCustomized> cidadeCustomized = (ArrayList) cidadeController.listCidades();
 
-        response.setContentType("text/json"); // tipo do conteúdo na resposta
-        response.setHeader("Content-Disposition", "attachment; filename=cidadesJ.json");
+        response.setContentType("text/csv"); // tipo do conteúdo na resposta
+        response.setHeader("Content-Disposition", "attachment; filename=cidadesJ.csv");
         OutputStream output = response.getOutputStream();
         Writer writer = new OutputStreamWriter(output);
         BufferedWriter bw = new BufferedWriter(writer);
@@ -62,7 +62,7 @@ public class OutPutTest {
         //bw.close();
         //output.close();
         System.out.println("Rodou");
-        return cidadeCustomized;
+        return output;
     }
 }
 
